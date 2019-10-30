@@ -1,0 +1,1 @@
+This file will be automatically create by the python server to store the compilled css and js codes.
