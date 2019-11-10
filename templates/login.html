@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Binding of Casper</title>
+    {% assets "css_all" %}
+        <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
+    {% endassets %}
+    <style type="text/css">
+        body {
+            background-image: url("{{ url_for('static', filename='img/webpage/isaacBK.jpg') }}");
+            background-size: 100% 100%;
+        }
+    </style>
+  </head>
+
+  <body>
+    <div id="home">
+
+        <div id="title">
+            <h1 id="hello">Binding of Casper: Login</h1>
+        </div>
+        <div id="loginBox">
+        <h3>Already have an account, login here:</h3>
+
+        <form  id="loginForm" name="loginForm" method="POST">
+            <strong>UserName : </strong><input type="text" id="PlayerLoginName" name="PlayerLoginName" value=""><br/>
+            <strong>Password :</strong> <input type="text" id="PlayerLoginPassword" name="PlayerLoginPassword" value=""><br/>
+            <input type="submit" value="Start Game">
+        </form>
+        </div>
+
+        <div id="SignUpBox">
+        <h3>Not played before, make an account:</h3>
+
+        <form  id="SignUpForm" name="SignUpForm" method="POST">
+            <strong>UserName : </strong><input type="text" id="PlayerName" name="PlayerName" value=""> <br/>
+            <strong>Password : </strong><input type="text" id="PlayerPassword" name="PlayerPassword" value=""> <br/>
+            <strong>Have you played the original game "Binding of Isaac"? : </strong><input type="text" id="PlayerExp" name="PlayerExp" value=""> <br/>
+            <input type="submit" value="Start Game"><br/>
+            <p>Please do not use a password which could give access to any of your personal information.</p> 
+        </form>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        message = {{ message|tojson }};
+        if (message !== '') {
+            alert(message);
+        }
+    </script>
+
+  </body>
+</html>
