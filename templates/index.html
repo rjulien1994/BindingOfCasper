@@ -1,86 +1,58 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Maybe Casper?</title>
+    <title>Binding of Casper</title>
     <meta charset="UTF-8" />
     {% assets "css_all" %}
         <link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}" />
     {% endassets %}
+    <style type="text/css">
+        body {
+            background-image: url("{{ url_for('static', filename='img/webpage/isaacBK.jpg') }}");
+            background-size: 100% 100%;
+        }
+    </style>
   </head>
 
   <body>
 
-    <h1 id="mainTitle">Is this Purgatory?</h1>
+    <img id="background" src="/static/img/gameElements/isaacJSBK.jpg" />
+    <img id="pauseBK" src="/static/img/gameElements/parchment.png" />
 
-    <img id="background" src="./static/img/gameElements/isaacJSBK.jpg" />
-    <img id="pauseBK" src="./static/img/gameElements/parchment.png" />
-
-    <img id="goldDoor" src="./static/img/gameElements/goldDoor.png" />
-    <img id="deathDoor" src="./static/img/gameElements/deathDoor.png" />
+    <img id="goldDoor" src="/static/img/gameElements/goldDoor.png" />
+    <img id="deathDoor" src="/static/img/gameElements/deathDoor.png" />
     <img
       id="closedDeathDoor"
-      src="./static/img/gameElements/closedDeathDoor.png"
+      src="/static/img/gameElements/closedDeathDoor.png"
     />
-    <img id="satanDoor" src="./static/img/gameElements/satanDoor.png" />
+    <img id="satanDoor" src="/static/img/gameElements/satanDoor.png" />
 
-    <img id="leftArrow" src="./static/img/gameElements/leftarrow.png" />
-    <img id="topArrow" src="./static/img/gameElements/toparrow.png" />
-    <img id="rightArrow" src="./static/img/gameElements/rightarrow.png" />
-    <img id="shootKeys" src="./static/img/gameElements/shootKeys.png" />
-    <img id="moveKeys" src="./static/img/gameElements/moveKeys.jpg" />
+    <img id="leftArrow" src="/static/img/gameElements/leftarrow.png" />
+    <img id="topArrow" src="/static/img/gameElements/toparrow.png" />
+    <img id="rightArrow" src="/static/img/gameElements/rightarrow.png" />
+    <img id="shootKeys" src="/static/img/gameElements/shootKeys.png" />
+    <img id="moveKeys" src="/static/img/gameElements/moveKeys.jpg" />
 
-    <img id="crown" src="./static/img/playerImg/winCrown.png" />
-    <img id="ghost" src="./static/img/playerImg/ghosty.png" />
-    <img id="Halo" src="./static/img/playerImg/halo.png" />
+    <img id="crown" src="/static/img/playerImg/winCrown.png" />
+    <img id="ghost" src="/static/img/playerImg/ghosty.png" />
+    <img id="Halo" src="/static/img/playerImg/halo.png" />
+    <img id="badge" src="/static/img/playerImg/specialBadge.png" />
 
-    <img id="timeIcon" src="./static/img/statsIcons/timeIcon.png" />
-    <img id="attackIcon" src="./static/img/statsIcons/attackIcon.png" />
-    <img id="speedIcon" src="./static/img/statsIcons/speedIcon.png" />
-    <img id="fireRateIcon" src="./static/img/statsIcons/fireRateIcon.png" />
-    <img id="shotSpeedIcon" src="./static/img/statsIcons/shotSpeedIcon.png" />
-    <img id="rangeIcon" src="./static/img/statsIcons/rangeIcon.jpg" />
+    <img id="timeIcon" src="/static/img/statsIcons/timeIcon.png" />
+    <img id="attackIcon" src="/static/img/statsIcons/attackIcon.png" />
+    <img id="speedIcon" src="/static/img/statsIcons/speedIcon.png" />
+    <img id="fireRateIcon" src="/static/img/statsIcons/fireRateIcon.png" />
+    <img id="shotSpeedIcon" src="/static/img/statsIcons/shotSpeedIcon.png" />
+    <img id="rangeIcon" src="/static/img/statsIcons/rangeIcon.jpg" />
 
-    <img id="littlePoop" src="./static/img/littlePoop.png" />
-
-    <p id="preGame">To start the game please enter a UserName:
-        <input type="text" id="createPlayerID" value="">
-        <button onClick="startGame()">Launch Game</button>
-    </p>
-
-    <div id="changePlayer">
-        <input type="number" id="changeAttack" value='{{ playerDefault.Attack }}'>
-        <input type="number" id="changeMaxSpeed" value='{{ playerDefault.MaxSpeed }}'>
-        <input type="number" id="changeFireRate" value='{{ playerDefault.FireRate }}'>
-        <input type="number" id="changeRange" value='{{ playerDefault.Range }}'>
-        <input type="number" id="changeShotSpeed" value='{{ playerDefault.ShotSpeed }}'>
-
-        <button onclick="changePlayerStats()">Commit Changes</button>
-    </div>
+    <img id="littlePoop" src="/static/img/monsters/littlePoop.png" />
+    <img id="fly" src="/static/img/monsters/fly.png" />
+    <img id="ghostMonster" src="/static/img/monsters/ghostyMonster.png" />
 
     <canvas id="gameScreen" width="1000" height="750"></canvas>
 
-    <form id="levelStats" name="levelStats" method="POST">
-        <input type="text" id="playerID" name="playerID" value='{{ playerDefault.ID }}'>
-        <input type="number" id="attack" name="attack" value='{{ playerDefault.Attack }}'>
-        <input type="number" id="maxSpeed" name="maxSpeed" value='{{ playerDefault.MaxSpeed }}'>
-        <input type="number" id="fireRate" name="fireRate" value='{{ playerDefault.FireRate }}'>
-        <input type="number" id="range" name="range" value='{{ playerDefault.Range }}'>
-        <input type="number" id="shotSpeed" name="shotSpeed" value='{{ playerDefault.ShotSpeed }}'>
-        </br>
-
-        {% for i in range(1, nLevels+1) %}
-            <input type="number" id="level{{ i }}" name="level{{ i }}" value='0'>
-            <input type="number" id="time{{ i }}" name="time{{ i }}" value='0'>
-            <input type="number" id="tearsShot{{ i }}" name="tearsShot{{ i }}" value='0'>
-            <input type="number" id="tearsHit{{ i }}" name="tearsHit{{ i }}" value='0'>
-            <input type="number" id="distanceTravelled{{ i }}" name="distanceTravelled{{ i }}" value='0'>
-            <input type="text" id="success{{ i }}" name="success{{ i }}" value='0'>
-            </br>
-        {% endfor %}
-    
-    </form>
     <script type="text/javascript">
-        pastWinners = {{ pastWinners|tojson }}
+        user = {{ user|tojson }}
     </script>
     {% assets "js_all" %}
         <script type='text/javascript' src="{{ ASSET_URL }}"></script>
