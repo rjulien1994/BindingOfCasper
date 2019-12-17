@@ -7,13 +7,13 @@ import mysql.connector
 app = Flask(__name__)   #We create run the flask app
 assets = Environment(app)
 
-myHost = "yourHost"     #These parameters are set when you build your database
-myUser = "yourUser"          #This is where you have to put your info
-myPassword = "yourPassword"
-myDatabase = "yourDB"
+myHost = "Host"     #These parameters are set when you build your database
+myUser = "User"          #This is where you have to put your info
+myPassword = "password"
+myDatabase = "db"
 
 css = Bundle('css/styles.css', filters='cssmin', output='temp/main.css')
-js = Bundle(    #concatonates all js files into one
+js = Bundle(
     "js/Collision.js",
     'js/tears.js',
     'js/player.js', 
@@ -28,8 +28,6 @@ js = Bundle(    #concatonates all js files into one
 
 assets.register('css_all', css);
 assets.register('js_all', js)
-
-numberOfLevels = 7; #this manual entry isn't convinient
 
 def insertData(table, dataPoints):    #add an entry in database
     mydb = mysql.connector.connect(
@@ -56,7 +54,7 @@ def insertData(table, dataPoints):    #add an entry in database
     
     mydb.close()
 
-def fetchData(table, variables, condition): #fetches data from db with potential condition
+def fetchData(table, variables, condition):
     mydb = mysql.connector.connect( #first we open the connection with the sql database
     host=myHost,   
     user=myUser,       
@@ -86,7 +84,7 @@ def fetchData(table, variables, condition): #fetches data from db with potential
 
     return data
 
-def editPlayerData(id): #this function only update player info if game won (a better name is required)
+def editPlayerData(id):
     mydb = mysql.connector.connect( #first we open the connection with the sql database
     host=myHost,   
     user=myUser,       
@@ -104,12 +102,13 @@ def editPlayerData(id): #this function only update player info if game won (a be
 
 @app.route("/")
 def defaultPage():
+
     return redirect(url_for('login'))
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    message = ''    #set message to empty
-    playerLogin = fetchData('Players', ['name', 'motDePasse', 'player_id','admin', 'won'],[]).tolist()  #update player list
+    message = ''
+    playerLogin = fetchData('Players', ['name', 'motDePasse', 'player_id','admin', 'won'],[]).tolist()
 
     if request.method == 'POST':    #checks if data is being loaded
         if request.form.get('PlayerLoginName') != None: #if user attemps to login
@@ -130,9 +129,9 @@ def login():
             else:                               #if userName taken
                 newPassword = request.form.get('PlayerPassword')
                 playerExp = request.form.get('PlayerExp')
-                if newPassword == "" or playerExp == "" or newPlayerName == "": #checks that no field is left blank
+                if newPassword == "" or playerExp == "" or newPlayerName == "":
                     message = "Please fill all fields to proceed"
-                else:   #loads new player and launch game
+                else:
                     newPlayerID = len(playerLogin[0]) + 1
                     newPlayerExp = request.form.get('PlayerExp')
                     newPlayerWon = 'False'
@@ -144,29 +143,34 @@ def login():
 
 @app.route("/bindingOfCasper/<string:userName>", methods=['GET', 'POST'])      #this is where you specify the path and methods to run the app
 def miniGame(userName):
-    
-    playerLogin = fetchData('Players', ['name', 'motDePasse', 'player_id','admin', 'won'],[]).tolist()  #updates the user db
+
+    playerLogin = fetchData('Players', ['name', 'motDePasse', 'player_id','admin', 'won'],[]).tolist()
     playerIndex = playerLogin[0].index(userName)
-    user = {        #loads all detail about player
+    user = {
         'Name': userName, 
         'player_id': playerLogin[2][playerIndex], 
         'won': playerLogin[4][playerIndex],
         'admin': playerLogin[3][playerIndex]
         }
 
-    if request.method == 'POST':    #check if game was played
+    if request.method == 'POST':
         level_key = len(fetchData('Levels', ['level_id'],[])[0])+1
         game_key = len(fetchData('Games', ['game_id'],[])[0])+1 #generate the primary key to store data in sql
 
-        insertData('Games', [game_key, user['player_id'], 5, 15, 2, 50, 35, str(datetime.now())])   #this default stats are unchanged so far
+        insertData('Games', 
+            [game_key, user['player_id'], 
+            request.form.get('attack'), 
+            request.form.get('speed'), 
+            request.form.get('fireRate'), 
+            request.form.get('range'), 
+            request.form.get('shotSpeed'), 
+            str(datetime.now()),
+            request.form.get('phone')
+            ])   #this default stats are unchanged so far
 
-        if len(request.form) == 6*numberOfLevels:   #checks if player finished the game
-            if request.form.get('success' + str(numberOfLevels)) == 'true':
-                editPlayerData(user['player_id'])   #if user wins we edits his entry
-
-        for i in range(int(len(request.form)/6)):   #each level has 6 paramters
+        for i in range(int(len(request.form)/6)-1):
             lvl = str(i+1)
-            info = [    #read data sent from javascript and formats it for sql
+            info = [
                     level_key,
                     game_key,
                     request.form.get('level' + lvl), 
@@ -178,9 +182,13 @@ def miniGame(userName):
                 ]
             level_key += 1
             insertData('Levels', info)
-    
+        
+        if info[7] == 'true':
+            editPlayerData(user['player_id'])   #if user wins we edits his entry
 
     return render_template('index.html', user=user) #pulls files to display info thru browser
 
-app.run(host='0.0.0.0', port=80) #set ip and port to listen to
 
+#debug mode by running script directly and not flask run
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=80)
