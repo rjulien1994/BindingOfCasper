@@ -1,16 +1,15 @@
 class Tear {
   constructor(player, game) {
-    this.radius = player.attack*0.1*game.gameWidth/100;
-    this.size = { x: 2*this.radius, y: 2*this.radius };
+    this.game = game;
+    this.player = player;
+    this.attack = player.attack;
+    this.setSize();
+
     this.position = {
       x: player.eyePosition.x + player.eyeSize.x - this.radius,
       y: player.eyePosition.y - this.radius
     };
-    this.range = player.range * game.gameWidth / 100;
-    this.speed = {
-      x: player.direction.x * player.shotSpeed * game.gameWidth / 100 + player.speed.x,
-      y: player.direction.y * player.shotSpeed * game.gameWidth / 100 + player.speed.y
-    };
+
     this.distance = 0;
     this.end = false;
   }
@@ -27,7 +26,17 @@ class Tear {
   draw(ctx) {
     ctx.fillStyle = "#27c2e8";
     ctx.beginPath();
-    ctx.arc(this.position.x + this.radius, this.position.y + this.radius, this.radius, 0, 2 * Math.PI);
+    ctx.arc((this.position.x + this.radius) * this.game.units.x, (this.position.y + this.radius) * this.game.units.y, this.radius * this.game.units.y, 0, 2 * Math.PI);
     ctx.fill();
+  }
+
+  setSize() {
+    this.radius = this.attack*0.1*this.game.gameWidth/100;
+    this.size = { x: 2*this.radius, y: 2*this.radius };
+    this.speed = {
+      x: this.player.direction.x * this.player.shotSpeed * this.game.gameWidth / 100 + this.player.speed.x,
+      y: this.player.direction.y * this.player.shotSpeed * this.game.gameWidth / 100 + this.player.speed.y
+    };
+    this.range = this.player.range * this.game.gameWidth / 100;
   }
 }
