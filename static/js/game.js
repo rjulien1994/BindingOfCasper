@@ -8,16 +8,17 @@ const gameStates = {
 }; //we set the different possible game states
 
 class Game {
-  constructor(gameWidth, gameHeight) {
+  constructor(canvaWidth, canvaHeight) {
     this.bkImage = document.getElementById("background"); //loads the background
-    this.gameWidth = gameWidth; //takes dimension of game
-    this.gameHeight = gameHeight;
+    this.gameWidth = 100; //takes dimension of game
+    this.gameHeight = 75;
+    this.setGameUnits(canvaWidth, canvaHeight);
     this.Limits = {
       //sets the limit according to thikness of walls
-      top: (12 * this.gameHeight) / 100,
-      bottom: (88 * this.gameHeight) / 100,
-      left: (7 * this.gameWidth) / 100,
-      right: (93 * this.gameWidth) / 100
+      top: 9,
+      bottom: (this.gameHeight - 9),
+      left: 7,
+      right: (this.gameWidth - 7)
     };
 
     this.levelstats = {
@@ -28,9 +29,20 @@ class Game {
       distanceTravelled: 0,
       success: false
     };
-
     this.player = new player(this); //initializes the player class
+    this.touchCommandKeys = [
+      {element: document.getElementById("moveLeft"), x: 6/10, y: 8/10}, 
+      {element: document.getElementById("moveRight"), x: 8/10, y: 8/10}, 
+      {element: document.getElementById("moveTop"), x: 7/10, y: 7.25/10}, 
+      {element: document.getElementById("moveDown"), x: 7/10, y: 8.75/10},
+      {element: document.getElementById("shootLeft"), x: 1/10, y: 8/10}, 
+      {element: document.getElementById("shootRight"), x: 3/10, y: 8/10}, 
+      {element: document.getElementById("shootUp"), x: 2/10, y: 7.25/10}, 
+      {element: document.getElementById("shootDown"), x: 2/10, y: 8.75/10}
+    ];
+    this.touchScreen = false;  
     new keyboardHandler(this.player, this); //open event listen for keyboard input
+    new touchScreenHandler(this.player, this);
     this.Modes = [
       new pause(this),
       new running(this),
@@ -39,7 +51,7 @@ class Game {
       new winner(this),
       new Credits(this)
     ];
-
+    
     this.resetGame(); //sets game to level 0 also menu
   }
 
@@ -47,13 +59,14 @@ class Game {
     if (this.gameState === gameStates.PAUSED) {
       return;
     } //If game paused no updates
+    this.updateGameFrame();
     this.inGameTime += dt / 1000; //counts the time is start function launched
     this.player.update(dt); //for interactive menu always update player
     this.Modes[this.gameState].update(dt);
   }
 
   draw(ctx) {
-    ctx.drawImage(this.bkImage, 0, 0, this.gameWidth, this.gameHeight); //always draw background
+    ctx.drawImage(this.bkImage, 0, 0, this.gameWidth*this.units.x, this.gameHeight*this.units.y); //always draw background
 
     if (this.gameState !== gameStates.GAMEOVER) {
       this.monsters.forEach(monster => monster.draw(ctx));
@@ -63,6 +76,35 @@ class Game {
 
     if (this.gameState !== gameStates.PAUSED) {
       this.player.draw(ctx);
+    }
+  }
+
+  updateGameFrame() {
+    let factor = Math.min(window.innerWidth/ this.gameWidth, window.innerHeight/ this.gameHeight);
+
+    if(canvas.height != factor*this.gameHeight || canvas.width != factor*this.gameWidth) {
+
+      canvas.height = factor*this.gameHeight;
+      canvas.width = factor*this.gameWidth;
+
+      this.setGameUnits(canvas.width, canvas.height);
+
+      document.body.style.overflow = 'hidden';  //removes white space
+      let topMargin = (window.innerHeight - canvas.height)/2;
+      let leftMargin = (window.innerWidth - canvas.width)/2;
+      document.body.style.margin = topMargin + 'px 0px 0px ' + leftMargin + 'px';
+    }
+    if(this.touchScreen) {
+      let imgSize = window.innerWidth/10;
+      let windowSize = {x: window.innerWidth, y: window.innerHeight}
+
+      for(let i = 0; i < this.touchCommandKeys.length; i++) {
+        this.touchCommandKeys[i].element.style.height = imgSize + 'px';
+        this.touchCommandKeys[i].element.style.position = 'absolute';
+        this.touchCommandKeys[i].element.style.left = windowSize.x*this.touchCommandKeys[i].x +'px';
+        this.touchCommandKeys[i].element.style.top = windowSize.y*this.touchCommandKeys[i].y +'px';
+      }
+
     }
   }
 
@@ -92,19 +134,13 @@ class Game {
   loadCredits() {
     this.setGameState("CREDIT");
     this.player.position.x =
-      this.Limits.right - (2 * this.gameWidth) / 100 - this.player.size.x;
+      this.Limits.right - 2 - this.player.size.x;
   }
 
   loadStats(win) {
     this.levelstats.time = this.inGameTime - this.levelstats.time;
     this.levelstats.success = win;
-    document.getElementById('level' + this.level).value = this.levelstats.level;
-    document.getElementById('time' + this.level).value = this.levelstats.time;
-    document.getElementById('tearsShot' + this.level).value = this.levelstats.tearsShot;
-    document.getElementById('tearsHit' + this.level).value = this.levelstats.tearsHit;
-    document.getElementById('distanceTravelled' + this.level).value = this.levelstats.distanceTravelled;
-    document.getElementById('success' + this.level).value = this.levelstats.success;
-
+    updateLevel(this.levelstats);
   }
 
   togglePause() {
@@ -125,14 +161,9 @@ class Game {
     this.monsters = setLevel(this, this.level);
     this.setGameState("MENU");
     this.player.resetPlayer();
+  }
 
-    for(var i = 1; i < Levels.length; i++) {
-      document.getElementById('level' + i).value = 0;
-      document.getElementById('time' + i).value = 0;
-      document.getElementById('tearsShot' + i).value = 0;
-      document.getElementById('tearsHit' + i).value = 0;
-      document.getElementById('distanceTravelled' + i).value = 0;
-      document.getElementById('success' + i).value = 0;
-    }
+  setGameUnits(xSize, ySize) {
+    this.units = {x: xSize/this.gameWidth , y: ySize/this.gameHeight };  //we make our default game frame 100 by 75
   }
 }
