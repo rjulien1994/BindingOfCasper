@@ -3,46 +3,44 @@ class keyboardHandler {
     this.player = player;
     document.addEventListener("keydown", event => {
       switch (event.keyCode) {
-        case 37:
+        case 37://left arrow
           player.move({ x: -1, y: 0 });
           break;
-        case 39:
+        case 39://right arrow
           player.move({ x: 1, y: 0 });
           break;
-        case 38:
+        case 38://top arrow
           player.move({ x: 0, y: -1 });
           break;
-        case 40:
+        case 40://bottom arrow
           player.move({ x: 0, y: 1 });
           break;
-        case 32:
+        case 32://space
           if (!player.blink) {
             player.blinkTrigger();
           }
           break;
 
-        case 87:
+        case 90://z
           player.look({ x: 0, y: -1 });
           break;
-        case 83:
-          player.look({ x: 0, y: 1 });
-          break;
-        case 65:
+        case 81://q
           player.look({ x: -1, y: 0 });
           break;
-        case 68:
+        case 87: //w
+          player.look({ x: 0, y: -1 });
+          break;
+        case 83://s
+          player.look({ x: 0, y: 1 });
+          break;
+        case 65://a
+          player.look({ x: -1, y: 0 });
+          break;
+        case 68://d
           player.look({ x: 1, y: 0 });
           break;
 
-        case 77:
-          game.resetGame();
-          break;
-
-        case 13:
-          game.start();
-          break;
-
-        case 27:
+        case 27://esc
           game.togglePause();
           break;
 
@@ -64,6 +62,17 @@ class keyboardHandler {
           break;
         case 40:
           if (player.speed.y > 0) player.stop({ x: false, y: true });
+          break;
+
+        case 90:
+          if (player.direction.y === -1) {
+            player.stopLooking();
+          }
+          break;
+        case 81:
+          if (player.direction.x === -1) {
+            player.stopLooking();
+          }
           break;
 
         case 87:
@@ -95,5 +104,95 @@ class keyboardHandler {
           break;
       }
     });
+  }
+}
+
+class touchScreenHandler {
+  constructor(player, game) {
+    this.game = game;
+
+    document.addEventListener("touchstart", function(ev) {
+      game.touchScreen = true;
+      document.getElementById("touchCommand").style.display = "block";
+      for(let i = 0; i < game.touchCommandKeys.length; i++) {
+        game.touchCommandKeys[i].element.style.display = "block";
+      }
+    }, false);
+
+
+    document.getElementById("shootUp").addEventListener("touchstart", function(ev) {
+      player.look({ x: 0, y: -1 });
+      ev.preventDefault();
+    },false);
+
+    document.getElementById("shootDown").addEventListener("touchstart", function(ev) {
+      player.look({ x: 0, y: 1 });
+      ev.preventDefault();
+    },false);
+
+    document.getElementById("shootLeft").addEventListener("touchstart", function(ev) {
+      player.look({ x: -1, y: 0 });
+      ev.preventDefault();
+    },false);
+
+    document.getElementById("shootRight").addEventListener("touchstart", function(ev) {
+      player.look({ x: 1, y: 0 });
+      ev.preventDefault();
+    },false);
+
+
+    document.getElementById("moveTop").addEventListener("touchstart", function(ev) {
+      player.move({ x: 0, y: -1 });
+      ev.preventDefault();
+    },false);
+
+    document.getElementById("moveDown").addEventListener("touchstart", function(ev) {
+      player.move({ x: 0, y: 1 });
+      ev.preventDefault();
+    },false);
+
+    document.getElementById("moveLeft").addEventListener("touchstart", function(ev) {
+      player.move({ x: -1, y: 0 });
+      ev.preventDefault();
+    },false);
+
+    document.getElementById("moveRight").addEventListener("touchstart", function(ev) {
+      player.move({ x: 1, y: 0 });
+      ev.preventDefault();
+    },false);
+
+
+    document.getElementById("shootUp").addEventListener("touchend", function(ev) {
+      if (player.direction.y === -1) player.stopLooking();
+    },false);
+
+    document.getElementById("shootDown").addEventListener("touchend", function(ev) {
+      if (player.direction.y === 1) player.stopLooking();
+    },false);
+
+    document.getElementById("shootLeft").addEventListener("touchend", function(ev) {
+      if (player.direction.x === -1) player.stopLooking();
+    },false);
+
+    document.getElementById("shootRight").addEventListener("touchend", function(ev) {
+      if (player.direction.x === 1) player.stopLooking();
+    },false);
+
+
+    document.getElementById("moveTop").addEventListener("touchend", function(ev) {
+      if (player.speed.y < 0) player.stop({ x: false, y: true });
+    },false);
+
+    document.getElementById("moveDown").addEventListener("touchend", function(ev) {
+      if (player.speed.y > 0) player.stop({ x: false, y: true });
+    },false);
+
+    document.getElementById("moveLeft").addEventListener("touchend", function(ev) {
+      if (player.speed.x < 0) player.stop({ x: true, y: false });
+    },false);
+
+    document.getElementById("moveRight").addEventListener("touchend", function(ev) {
+      if (player.speed.x > 0) player.stop({ x: true, y: false });
+    },false);
   }
 }
