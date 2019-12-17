@@ -1,13 +1,40 @@
 var canvas = document.getElementById("gameScreen");
 var context = canvas.getContext("2d");
 
-const GAME_WIDTH = canvas.width;
-const GAME_HEIGHT = canvas.height;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-var game = new Game(GAME_WIDTH, GAME_HEIGHT);
+var game = new Game(canvas.width, canvas.height);
 
 var lastTime = 0;
 var deltaTime = 1;
+
+const form = document.createElement('form');
+form.method = 'POST';
+form.action = window.location.href;
+
+function updateLevel(statistics) {
+  let lvl = statistics.level;
+  for (let parameter in statistics) {
+    var hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = parameter + lvl;
+    hiddenField.value = statistics[parameter];
+    form.appendChild(hiddenField);
+  }
+}
+
+function postData(playerPars) {
+  for (let parameter in playerPars) {
+    var hiddenField = document.createElement('input');
+    hiddenField.type = 'hidden';
+    hiddenField.name = parameter;
+    hiddenField.value = playerPars[parameter];
+    form.appendChild(hiddenField);
+  }
+  document.body.appendChild(form);
+  form.submit();
+}
 
 function gameLoop(timeStamp) {
   if (lastTime === 0) {
@@ -17,41 +44,33 @@ function gameLoop(timeStamp) {
   }
   lastTime = timeStamp;
 
-  context.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
-
   game.update(deltaTime);
   game.draw(context);
 
   requestAnimationFrame(gameLoop);
 }
 
-function startGame() {
-  game.player.ID = document.getElementById('createPlayerID').value;
-  if(game.player.ID === "") {
-    window.alert("Please enter UserName to continue");
-    return;
+if (user.admin === 'True'){
+  let param = ["attack", "speed", "fireRate", "range", "shotSpeed"];
+  document.getElementById('adminBoard').style.display = "block";
+
+  for (let i = 0; i < 5; i++) {
+    let parId = param[i]+'Edit';
+    let title = document.createElement('h4');
+    title.innerHTML = param[i];
+    title.style.position = 'absolute';
+    title.style.left = (1+i*1.25)*(window.innerWidth/8) + 'px';
+    title.style.top = window.innerHeight/20 +'px';
+    title.style.color = 'white';
+    document.getElementById("adminBoard").appendChild(title);
+
+    if(param[i] === "speed") {param[i] = 'maxSpeed'}
+    document.getElementById(parId).value = game.player[param[i]];
+    document.getElementById(parId).style.position = 'absolute';
+    document.getElementById(parId).style.left = (1+i*1.25)*(window.innerWidth/8) + 'px';
+    document.getElementById(parId).style.top = window.innerHeight/10 +'px';
+    document.getElementById(parId).style.width = window.innerWidth/8 + 'px';
   }
-  else {
-
-  game.player.won = pastWinners.includes(game.player.ID)
-  document.getElementById("playerID").value = game.player.ID;
-  document.getElementById("preGame").style.display = "none";
-  document.getElementById("gameScreen").style.display = "block";
-  requestAnimationFrame(gameLoop);
-  }
 }
 
-function changePlayerStats() {
-  document.getElementById("attack").value = document.getElementById("changeAttack").value;
-  document.getElementById("maxSpeed").value = document.getElementById("changeMaxSpeed").value;
-  document.getElementById("fireRate").value = document.getElementById("changeFireRate").value;
-  document.getElementById("range").value = document.getElementById("changeRange").value;
-  document.getElementById("shotSpeed").value = document.getElementById("changeShotSpeed").value;
-  game.resetGame();
-}
-
-if(document.getElementById("playerID").value !== "")
-{
-  document.getElementById("createPlayerID").value = document.getElementById("playerID").value;
-  startGame();
-}
+requestAnimationFrame(gameLoop);
