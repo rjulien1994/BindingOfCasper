@@ -49,7 +49,26 @@
     <img id="fly" src="/static/img/monsters/fly.png" />
     <img id="ghostMonster" src="/static/img/monsters/ghostyMonster.png" />
 
+    <div id="adminBoard">
+        <input type="number" name="attackEdit" id="attackEdit">
+        <input type="number" name="speedEdit" id="speedEdit">
+        <input type="number" name="fireRateEdit" id="fireRateEdit">
+        <input type="number" name="rangeEdit" id="rangeEdit">
+        <input type="number" name="shotSpeedEdit" id="shotSpeedEdit">
+    </div>
+    
     <canvas id="gameScreen" width="1000" height="750"></canvas>
+
+    <div id="touchCommand">
+        <img id="moveRight" src="/static/img/touchKeys/moveRight3.png" />
+        <img id="moveLeft" src="/static/img/touchKeys/moveLeft.png" />
+        <img id="moveTop" src="/static/img/touchKeys/moveTop.png" />
+        <img id="moveDown" src="/static/img/touchKeys/moveDown.png" />
+        <img id="shootRight" src="/static/img/touchKeys/shootRight.png" />
+        <img id="shootLeft" src="/static/img/touchKeys/shootLeft.png" />
+        <img id="shootUp" src="/static/img/touchKeys/shootUp.png" />
+        <img id="shootDown" src="/static/img/touchKeys/shootDown.png" />
+    </div>
 
     <script type="text/javascript">
         user = {{ user|tojson }}
