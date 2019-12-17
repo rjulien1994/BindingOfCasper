@@ -11,7 +11,7 @@ class menu {
       document.getElementById("topArrow"),
       document.getElementById("rightArrow")
     ];
-    this.arrowsSize = { x: game.gameWidth / 10, y: game.gameWidth / 10 };
+    this.arrowsSize = { x: 10, y: 10};
     this.keysIcons = [
       document.getElementById("shootKeys"),
       document.getElementById("moveKeys")
@@ -27,7 +27,7 @@ class menu {
       door.draw(ctx);
     });
 
-    var textSize = this.game.gameHeight / 30;
+    var textSize = 2.5 * this.game.units.y;
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.font = textSize + "px Arial";
@@ -37,73 +37,73 @@ class menu {
     ctx.drawImage(
       //draws the icon
       this.arrows[0],
-      this.game.gameWidth / 6 - this.arrowsSize.x / 2,
-      this.game.gameHeight / 2 - this.arrowsSize.y / 2,
-      this.arrowsSize.x,
-      this.arrowsSize.y
+      (this.game.gameWidth / 6 - this.arrowsSize.x / 2) * this.game.units.x,
+      (this.game.gameHeight / 2 - this.arrowsSize.y / 2) * this.game.units.y,
+      this.arrowsSize.x * this.game.units.x,
+      this.arrowsSize.y * this.game.units.y
     );
     ctx.fillText(
       "Next Level",
-      (6 * this.game.gameWidth) / 10,
-      this.game.gameHeight / 4
+      60 * this.game.units.x,
+      this.game.gameHeight * this.game.units.y / 4
     );
     ctx.drawImage(
       //draws the icon
       this.arrows[1],
-      this.game.gameWidth / 2 - this.arrowsSize.x / 2,
-      this.game.gameHeight / 4 - this.arrowsSize.y / 2,
-      this.arrowsSize.x,
-      this.arrowsSize.y
+      (this.game.gameWidth / 2 - this.arrowsSize.x / 2) * this.game.units.x,
+      (this.game.gameHeight / 4 - this.arrowsSize.y / 2) * this.game.units.y,
+      this.arrowsSize.x * this.game.units.x,
+      this.arrowsSize.y * this.game.units.y
     );
     ctx.fillText(
-      "Start Over",
-      (8.3 * this.game.gameWidth) / 10,
-      (4.5 * this.game.gameHeight) / 10
+      "Save Stats",
+      (8.3 * this.game.gameWidth * this.game.units.x) / 10,
+      (4.5 * this.game.gameHeight * this.game.units.y) / 10
     );
     ctx.drawImage(
       //draws the icon
       this.arrows[2],
-      (5 * this.game.gameWidth) / 6 - this.arrowsSize.x / 2,
-      this.game.gameHeight / 2 - this.arrowsSize.y / 2,
-      this.arrowsSize.x,
-      this.arrowsSize.y
+      (5 * this.game.gameWidth / 6 - this.arrowsSize.x / 2) * this.game.units.x,
+      (this.game.gameHeight / 2 - this.arrowsSize.y / 2) * this.game.units.y,
+      this.arrowsSize.x * this.game.units.x,
+      this.arrowsSize.y * this.game.units.y
     );
     ctx.fillText(
       "Credits",
-      (1.7 * this.game.gameWidth) / 10,
-      (4.5 * this.game.gameHeight) / 10
+      (1.7 * this.game.gameWidth / 10) * this.game.units.x,
+      (4.5 * this.game.gameHeight / 10) * this.game.units.y
     );
 
     ctx.drawImage(
       //draws the icon
       this.keysIcons[0],
-      this.game.gameWidth / 3 - this.arrowsSize.x / 2,
-      (3 * this.game.gameHeight) / 4 - this.arrowsSize.y / 2,
-      this.arrowsSize.x,
-      this.arrowsSize.y
+      (this.game.gameWidth / 3 - this.arrowsSize.x / 2) * this.game.units.x,
+      (3 * this.game.gameHeight / 4 - this.arrowsSize.y / 2) * this.game.units.y,
+      this.arrowsSize.x * this.game.units.x,
+      this.arrowsSize.y * this.game.units.y
     );
     ctx.fillText(
       "Shoot",
-      (3.3 * this.game.gameWidth) / 10,
-      (6.7 * this.game.gameHeight) / 10
+      (3.3 * this.game.gameWidth / 10) * this.game.units.x,
+      (6.7 * this.game.gameHeight / 10) * this.game.units.y
     );
     ctx.drawImage(
       //draws the icon
       this.keysIcons[1],
-      (2 * this.game.gameWidth) / 3 - this.arrowsSize.x / 2,
-      (3 * this.game.gameHeight) / 4 - this.arrowsSize.y / 2,
-      this.arrowsSize.x,
-      this.arrowsSize.y
+      (2 * this.game.gameWidth / 3 - this.arrowsSize.x / 2) * this.game.units.x,
+      (3 * this.game.gameHeight / 4 - this.arrowsSize.y / 2) * this.game.units.y,
+      this.arrowsSize.x * this.game.units.x,
+      this.arrowsSize.y * this.game.units.y
     );
     ctx.fillText(
       "Move",
-      (6.7 * this.game.gameWidth) / 10,
-      (6.7 * this.game.gameHeight) / 10
+      (6.7 * this.game.gameWidth / 10) * this.game.units.x,
+      (6.7 * this.game.gameHeight / 10) * this.game.units.y
     );
 
-    textSize = this.game.gameHeight / 10;
+    textSize = (this.game.gameHeight / 10) * this.game.units.y;
     ctx.font = textSize + "px Arial";
-    ctx.fillText("Menu", this.game.gameWidth / 4, this.game.gameHeight / 4);
+    ctx.fillText("Menu", (this.game.gameWidth / 4) * this.game.units.x, (this.game.gameHeight / 4) * this.game.units.y);
 
     ctx.globalAlpha = 1;
   }
@@ -120,11 +120,11 @@ class gameOver {
     });
   }
   draw(ctx) {
-    ctx.font = this.game.gameHeight / 10 + "px Arial";
+    ctx.font = (this.game.gameHeight / 10) * this.game.units.y + "px Arial";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.globalAlpha = 0.4;
-    ctx.fillText("You lost", this.game.gameWidth / 2, this.game.gameHeight / 2);
+    ctx.fillText("You lost", this.game.gameWidth * this.game.units.x / 2, this.game.gameHeight * this.game.units.y / 2);
     ctx.globalAlpha = 1;
     this.doors.forEach(door => {
       door.draw(ctx);
@@ -143,11 +143,11 @@ class winner {
     });
   }
   draw(ctx) {
-    ctx.font = this.game.gameHeight / 10 + "px Arial";
+    ctx.font = (this.game.gameHeight / 10) * this.game.units.y + "px Arial";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.globalAlpha = 0.4;
-    ctx.fillText("You Won", this.game.gameWidth / 2, this.game.gameHeight / 2);
+    ctx.fillText("You Won", (this.game.gameWidth / 2) * this.game.units.x, (this.game.gameHeight / 2) * this.game.units.y);
     ctx.globalAlpha = 1;
     this.doors.forEach(door => {
       door.draw(ctx);
@@ -194,56 +194,56 @@ class pause {
   draw(ctx) {
     this.game.player.draw(ctx);
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-    ctx.fillRect(0, 0, this.game.gameWidth, this.game.gameHeight);
+    ctx.fillRect(0, 0, this.game.gameWidth * this.game.units.x, this.game.gameHeight * this.game.units.y);
 
     ctx.drawImage(
       //draws the parchment icon
       this.image,
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y
+      this.position.x * this.game.units.x,
+      this.position.y * this.game.units.y,
+      this.size.x * this.game.units.x,
+      this.size.y * this.game.units.y
     );
 
-    var textSize = this.size.y / 10;
+    var textSize = (this.size.y / 10) * this.game.units.y;
     ctx.font = textSize + "px Arial";
     ctx.fillStyle = "black";
     ctx.textAlign = "center";
     ctx.fillText(
       "Paused",
-      this.position.x + (5.5 * this.size.x) / 10,
-      this.position.y + this.size.y / 4
+      (this.position.x + (5.5 * this.size.x) / 10) * this.game.units.x,
+      (this.position.y + this.size.y / 4) * this.game.units.y
     );
 
     ctx.drawImage(
       //draws time icon
       this.timeImg,
-      this.position.x + this.size.x / 5,
-      this.position.y + (83 * this.size.y) / 100,
-      this.size.x / 15,
-      this.size.y / 15
+      (this.position.x + this.size.x / 5) * this.game.units.x,
+      (this.position.y + (83 * this.size.y) / 100) * this.game.units.y,
+      (this.size.x / 15) * this.game.units.x,
+      (this.size.y / 15) * this.game.units.y
     );
-    textSize = this.size.y / 30;
+    textSize = (this.size.y / 30) * this.game.units.y;
     ctx.font = textSize + "px Arial";
     ctx.fillText(
       Math.floor(this.game.inGameTime),
-      this.position.x + this.size.x / 3,
-      this.position.y + (88 * this.size.y) / 100
+      (this.position.x + this.size.x / 3) * this.game.units.x,
+      (this.position.y + (88 * this.size.y) / 100) * this.game.units.y
     );
 
     for (var i = 0; i < this.statsImg.length; i++) {
       ctx.drawImage(
         //draws the icon
         this.statsImg[i],
-        this.position.x + this.size.x / 2,
-        this.position.y + (30 * this.size.y) / 100 + (i * this.size.y) / 15,
-        this.size.x / 20,
-        this.size.y / 20
+        (this.position.x + this.size.x / 2) * this.game.units.x,
+        (this.position.y + (30 * this.size.y) / 100 + (i * this.size.y) / 15) * this.game.units.y,
+        (this.size.x / 20) * this.game.units.x,
+        (this.size.y / 20) * this.game.units.y
       );
       ctx.fillText(
         this.statsValue[i],
-        this.position.x + (65 * this.size.x) / 100,
-        this.position.y + (33 * this.size.y) / 100 + (i * this.size.y) / 15
+        (this.position.x + (65 * this.size.x) / 100) * this.game.units.x,
+        (this.position.y + (33 * this.size.y) / 100 + (i * this.size.y) / 15) * this.game.units.y
       );
     }
   }
@@ -260,10 +260,24 @@ class Credits {
     });
   }
   draw(ctx) {
-    ctx.font = "18px Arial";
+    var textSize = 2*this.game.gameWidth*this.game.units.y/100;
+    ctx.font = textSize + "px Arial";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
-    ctx.fillText("Here will be the description of the game", 500, 200);
+    ctx.fillText("This game is inspired by and a copy of Binding of Isaac", this.game.gameWidth/2 * this.game.units.x, 3*this.game.gameHeight/16 * this.game.units.y);
+    ctx.fillText("I do not claim any intellectual property regarding the images and ideas involved in this game", this.game.gameWidth/2 * this.game.units.x, 4*this.game.gameHeight/16 * this.game.units.y);
+
+    ctx.fillText("This game was created for a software tool class at Baruch College", this.game.gameWidth/2 * this.game.units.x, 6*this.game.gameHeight/16 * this.game.units.y);
+    ctx.fillText("The objective of the project is to efficiently and dynamically collect data from a web browser,", this.game.gameWidth/2 * this.game.units.x, 7*this.game.gameHeight/16 * this.game.units.y);
+    ctx.fillText("recognize information that is relevant to the deign of the game,", this.game.gameWidth/2 * this.game.units.x, 8*this.game.gameHeight/16 * this.game.units.y);
+    ctx.fillText("analyze collected intel using r to draw conclusions about user's experience,", this.game.gameWidth/2 * this.game.units.x, 9*this.game.gameHeight/16 * this.game.units.y);
+    ctx.fillText("and finally use the results of the analysis to further develop the game.", this.game.gameWidth/2 * this.game.units.x, 10*this.game.gameHeight/16 * this.game.units.y);
+
+    ctx.fillText("All the code and content of this page is available at https://github.com/rjulien1994/BindingOfCasper", this.game.gameWidth/2 * this.game.units.x, 12*this.game.gameHeight/16 * this.game.units.y);
+    ctx.fillText("If you have any questions about or interest in the project don't hesitate to contact me", this.game.gameWidth/2 * this.game.units.x, 13*this.game.gameHeight/16 * this.game.units.y);
+    ctx.fillText("email: julien.rappe@hotmail.com", this.game.gameWidth/2 * this.game.units.x, 14*this.game.gameHeight/16 * this.game.units.y);
+    
+    
     this.doors.forEach(door => {
       door.draw(ctx);
     });
@@ -280,7 +294,7 @@ class running {
     this.game.monsters.forEach(monster => monster.update(dt)); //update every monster
     this.game.monsters = this.game.monsters.filter(monster => !monster.hit); //removes monsters that are hit
 
-    if (this.game.monsters.length === 0 & this.game.level < 3) {
+    if (this.game.monsters.length === 0 & this.game.level < Levels.length) {
       //checks if any monsters left
       if (this.endRound) {
         this.game.loadStats(true);
