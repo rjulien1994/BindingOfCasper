@@ -2,12 +2,23 @@ class player {
   constructor(game) {
     this.game = game; //import the game into the player
     //First we initialize the charactert
-    this.ID = document.getElementById("playerID").value;
+    this.ID = user.Name;
 
     this.image = document.getElementById("ghost"); //loads ouline
     this.crownImg = document.getElementById("crown");
     this.haloImg = document.getElementById("Halo");
-    this.won = false;
+    this.adminBadge = document.getElementById("badge");
+
+    if (user.won == 'True') {
+      this.won = true;
+    } else {
+      this.won = false;
+    }
+    if (user.admin == 'True') {
+      this.admin = true;
+    } else {
+      this.admin = false;
+    }
     this.resetPlayer();
   }
 
@@ -41,34 +52,41 @@ class player {
   draw(context) {
     context.drawImage(
       this.image,
-      this.position.x,
-      this.position.y,
-      this.size.x,
-      this.size.y
+      this.position.x * this.game.units.x,
+      this.position.y * this.game.units.y,
+      this.size.x * this.game.units.x,
+      this.size.y * this.game.units.y
     ); //draws outline of guost
     context.font = "18px Arial";
     context.fillStyle = "Black";
     context.textAlign = "center";
-    context.fillText(this.ID, this.position.x + this.size.x/2, this.position.y - this.size.y/8);
-    if (this.won) {
-      this.drawCrown(context);
-    }
+    context.fillText(this.ID, (this.position.x + this.size.x/2) * this.game.units.x, (this.position.y - this.size.y/8) * this.game.units.y);
+    if (this.won) {this.drawCrown(context)}
+    if (this.admin) {this.drawBadge(context)}
     this.drawEyes(context);
     this.drawMouth(context);
-    if (this.hit) {
-      this.drawHalo(context);
-    }
+    if (this.hit) {this.drawHalo(context)}
 
     this.tears.forEach(object => object.draw(context));
+  }
+
+  drawBadge(context) {
+    context.drawImage(
+      this.adminBadge,
+      (this.position.x + 6*this.size.x / 10) * this.game.units.x,
+      (this.position.y + 6.5*this.size.y / 10) * this.game.units.y,
+      (this.size.x / 3) * this.game.units.x,
+      (this.size.y / 4) * this.game.units.y
+    );
   }
 
   drawHalo(context) {
     context.drawImage(
       this.haloImg,
-      this.position.x + this.size.x / 10,
-      this.position.y - this.size.y / 10,
-      this.size.x,
-      this.size.y / 5
+      (this.position.x + this.size.x / 10) * this.game.units.x,
+      (this.position.y - this.size.y / 10) * this.game.units.y,
+      (this.size.x) * this.game.units.x,
+      (this.size.y / 5) * this.game.units.y
     );
   }
 
@@ -98,19 +116,19 @@ class player {
     context.fillStyle = "#000000";
     context.beginPath();
     context.ellipse(
-      this.eyePosition.x,
-      this.eyePosition.y,
-      this.eyeSize.x,
-      this.eyeSize.y,
+      (this.eyePosition.x) * this.game.units.x,
+      (this.eyePosition.y) * this.game.units.y,
+      (this.eyeSize.x) * this.game.units.x,
+      (this.eyeSize.y) * this.game.units.y,
       0,
       0,
       2 * Math.PI
     );
     context.ellipse(
-      this.eyePosition.x + this.eyeSize.x * 2,
-      this.eyePosition.y,
-      this.eyeSize.x,
-      this.eyeSize.y,
+      (this.eyePosition.x + this.eyeSize.x * 2) * this.game.units.x,
+      (this.eyePosition.y) * this.game.units.y,
+      (this.eyeSize.x) * this.game.units.x,
+      (this.eyeSize.y) * this.game.units.y,
       0,
       0,
       2 * Math.PI
@@ -124,19 +142,19 @@ class player {
       context.fillStyle = "#d6d6d4";
       context.beginPath();
       context.ellipse(
-        pupilPosition.x,
-        pupilPosition.y,
-        pupilSize.x,
-        pupilSize.y,
+        pupilPosition.x * this.game.units.x,
+        pupilPosition.y * this.game.units.y,
+        pupilSize.x * this.game.units.x,
+        pupilSize.y * this.game.units.y,
         0,
         0,
         2 * Math.PI
       );
       context.ellipse(
-        pupilPosition.x + this.eyeSize.x * 2,
-        pupilPosition.y,
-        pupilSize.x,
-        pupilSize.y,
+        (pupilPosition.x + this.eyeSize.x * 2) * this.game.units.x,
+        pupilPosition.y * this.game.units.y,
+        pupilSize.x * this.game.units.x,
+        pupilSize.y * this.game.units.y,
         0,
         0,
         2 * Math.PI
@@ -163,20 +181,20 @@ class player {
     context.fillStyle = "#d6d6d4";
     context.beginPath();
     context.ellipse(
-      mouthPosition.x,
-      mouthPosition.y,
-      mouthSize.x,
-      mouthSize.y,
+      mouthPosition.x * this.game.units.x,
+      mouthPosition.y * this.game.units.y,
+      mouthSize.x * this.game.units.x,
+      mouthSize.y * this.game.units.y,
       0,
       Math.PI,
       2 * Math.PI
     );
 
     context.ellipse(
-      mouthPosition.x,
-      mouthPosition.y,
-      mouthSize.x,
-      mouthSize.y * 0.5,
+      mouthPosition.x * this.game.units.x,
+      mouthPosition.y * this.game.units.y,
+      mouthSize.x * this.game.units.x,
+      mouthSize.y * 0.5 * this.game.units.y,
       0,
       2 * Math.PI,
       Math.PI,
@@ -188,10 +206,10 @@ class player {
   drawCrown(context) {
     context.drawImage(
       this.crownImg,
-      this.position.x - (0.2 * this.game.gameWidth) / 100,
-      this.position.y - (6 * this.game.gameHeight) / 100,
-      this.size.x * 1.2,
-      this.size.y * 0.65
+      (this.position.x - (0.2 * this.game.gameWidth) / 100) * this.game.units.x,
+      (this.position.y - (6 * this.game.gameHeight) / 100) * this.game.units.y,
+      (this.size.x * 1.2) * this.game.units.x,
+      (this.size.y * 0.65) * this.game.units.y
     );
   }
 
@@ -275,11 +293,11 @@ class player {
     this.looking = false;
 
     //Now we set the game stats of the character
-    this.attack = document.getElementById("attack").value;  //all stats given in % of screenWidth
-    this.maxSpeed = document.getElementById("maxSpeed").value;
-    this.fireRate = document.getElementById("fireRate").value;
-    this.range = document.getElementById("range").value;
-    this.shotSpeed = document.getElementById("shotSpeed").value;
+    this.attack = 5;  //all stats given in % of screenWidth
+    this.maxSpeed = 15;
+    this.fireRate = 2;
+    this.range = 50;
+    this.shotSpeed = 35;
 
     this.shotTime = 0;
     this.hit = false;
