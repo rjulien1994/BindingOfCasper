@@ -32,3 +32,11 @@ div h3 {
 div input {
 	margin: 0.5%;
 }
+
+#adminBoard {
+	display: none;
+}
+
+#touchCommand {
+	display: none;
+}
