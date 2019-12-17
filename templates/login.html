@@ -24,7 +24,7 @@
 
         <form  id="loginForm" name="loginForm" method="POST">
             <strong>UserName : </strong><input type="text" id="PlayerLoginName" name="PlayerLoginName" value=""><br/>
-            <strong>Password :</strong> <input type="text" id="PlayerLoginPassword" name="PlayerLoginPassword" value=""><br/>
+            <strong>Password :</strong> <input type="password" id="PlayerLoginPassword" name="PlayerLoginPassword" value=""><br/>
             <input type="submit" value="Start Game">
         </form>
         </div>
@@ -33,10 +33,11 @@
         <h3>Not played before, make an account:</h3>
 
         <form  id="SignUpForm" name="SignUpForm" method="POST">
-            <strong>UserName : </strong><input type="text" id="PlayerName" name="PlayerName" value=""> <br/>
-            <strong>Password : </strong><input type="text" id="PlayerPassword" name="PlayerPassword" value=""> <br/>
-            <strong>Have you played the original game "Binding of Isaac"? : </strong><input type="text" id="PlayerExp" name="PlayerExp" value=""> <br/>
+            <strong>UserName : </strong><input type="text" minlength="5" maxlength="20" id="PlayerName" name="PlayerName" value="" pattern="[A-Za-z0-9]+"> <br/>
+            <strong>Password : </strong><input type="password" minlength="5" maxlength="20" id="PlayerPassword" name="PlayerPassword" value="" pattern="[A-Za-z0-9]+"> <br/>
+            <strong>Have you played the original game "Binding of Isaac"? : </strong><input type="text" maxlength="20" id="PlayerExp" name="PlayerExp" value=""> <br/>
             <input type="submit" value="Start Game"><br/>
+            <p>The inputs only support letters and numbers</p>
             <p>Please do not use a password which could give access to any of your personal information.</p> 
         </form>
         </div>
@@ -47,6 +48,8 @@
         if (message !== '') {
             alert(message);
         }
+
+        
     </script>
 
   </body>
