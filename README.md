@@ -1,2 +1,3 @@
 # BindingOfCasper
-This is my first javascript game, hope you enjoy it.
+
+This is one of my first Javascript project, check out my interactive resume for more recent work.
